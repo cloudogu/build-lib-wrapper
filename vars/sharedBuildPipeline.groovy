@@ -89,7 +89,7 @@ def call(Map config) {
         timestamps {
             properties([
                 buildDiscarder(logRotator(numToKeepStr: '10')),
-                disableConcurrentBuilds()
+                disableConcurrentBuilds(),
                 parameters([
                         booleanParam(defaultValue: false, description: 'Test dogu upgrade from latest release or optionally from defined version below', name: 'TestDoguUpgrade'),
                         booleanParam(defaultValue: true, description: 'Enables cypress to record video of the integration tests.', name: 'EnableVideoRecording'),
