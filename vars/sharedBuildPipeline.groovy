@@ -1,8 +1,4 @@
 #!groovy sharedBuildPipeline.groovy
-@Library([
-  'github.com/cloudogu/ces-build-lib@4.1.0',
-  'github.com/cloudogu/dogu-build-lib@v3.0.0'
-]) _
 import com.cloudogu.ces.cesbuildlib.*
 import com.cloudogu.ces.dogubuildlib.*
 
