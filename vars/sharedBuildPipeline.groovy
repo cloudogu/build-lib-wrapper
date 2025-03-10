@@ -73,6 +73,7 @@ def call(Map config) {
             if (shellScripts) {
                 stage('Shellcheck') {
                     shellCheck(shellScripts)
+                }
             }
 
             if (config.runShellTests) {
