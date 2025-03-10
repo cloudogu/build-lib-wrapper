@@ -36,18 +36,18 @@ def call(Map config) {
     def committerEmail      = config.committerEmail
     def gcloudCredentials   = config.gcloudCredentials
     def sshCredentials      = config.sshCredentials
-    def preBuildAgent       = config.preBuildAgent?        : 'docker'
-    def buildAgent          = config.buildAgent?           : 'vagrant'
-    def doguDir             = config.doguDirectory?        : "/dogu"
-    def namespace           = config.namespace?            : "official"
-    def waitForDepTime      = config.waitForDepTime?       : 15 // Minutes
-    def cypressImage        = config.cypressImage?         : "cypress/included:13.15.2"
-    def upgradeCypressImage = config.upgradeCypressImage?  : "cypress/included:13.2.0"
-    def shellScripts        = config.shellScripts?         : '' // single string to paths delimited by whitespace
-    def dependedDogus       = config.dependencies?         : ''
-    def markdownVersion     = config.markdownVersion?      : "3.12.2" 
-    def updateSubmodules    = config.updateSubmodules?     : false 
-    def runIntegrationTests = config.runIntegrationTests?  : true
+    def preBuildAgent       = config.preBuildAgent ? config.preBuildAgent : 'docker'
+    def buildAgent          = config.buildAgent ? config.buildAgent : 'vagrant'
+    def doguDir             = config.doguDirectory ? config.doguDirectory : "/dogu"
+    def namespace           = config.namespace ? config.namespace : "official"
+    def waitForDepTime      = config.waitForDepTime ? config.waitForDepTime : 15 // Minutes
+    def cypressImage        = config.cypressImage ? config.cypressImage : "cypress/included:13.15.2"
+    def upgradeCypressImage = config.upgradeCypressImage ? config.upgradeCypressImage : "cypress/included:13.2.0"
+    def shellScripts        = config.shellScripts ? config.shellScripts : '' // single string to paths delimited by whitespace
+    def dependedDogus       = config.dependencies ? config.dependencies : ''
+    def markdownVersion     = config.markdownVersion ? config.markdownVersion : "3.12.2" 
+    def updateSubmodules    = config.updateSubmodules ? config.updateSubmodules : false 
+    def runIntegrationTests = config.runIntegrationTests ? config.runIntegrationTests : true
 
     // PRE-BUILD STEPS (e.g. Checkout, Lint, Markdown, Shell tests) on preBuildAgent.
     node(preBuildAgent) {
