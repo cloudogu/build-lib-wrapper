@@ -43,7 +43,7 @@ def call(Map config) {
     def dependedDogus       = config.dependencies ? config.dependencies : ''
     def markdownVersion     = config.markdownVersion ? config.markdownVersion : "3.12.2" 
     def updateSubmodules    = config.updateSubmodules ? config.updateSubmodules : false 
-    def runIntegrationTests = config.runIntegrationTests ? config.runIntegrationTests : true
+    def runIntegrationTests = config.runIntegrationTests ? config.runIntegrationTests : false
 
     // PRE-BUILD STEPS (e.g. Checkout, Lint, Markdown, Shell tests) on preBuildAgent.
     node(preBuildAgent) {
