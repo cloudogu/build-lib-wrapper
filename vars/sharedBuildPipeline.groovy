@@ -18,12 +18,8 @@ import com.cloudogu.ces.dogubuildlib.*
  * - cypressImage (default: "cypress/included:13.15.2")
  * - upgradeCypressImage (default: "cypress/included:13.2.0")
  * - dependencies (optional List<String>) – names of dependencies to wait for
- * 
- * Additionally, the pipeline expects common parameters to be defined in the job:
- *   TestDoguUpgrade (boolean), OldDoguVersionForUpgradeTest (string),
- *   EnableVideoRecording (boolean), EnableScreenshotRecording (boolean),
- *   TrivySeverityLevels, TrivyStrategy, etc.
  */
+ 
 def call(Map config) {
     // Use default node labels if not provided.
     def doguName            = config.doguName
