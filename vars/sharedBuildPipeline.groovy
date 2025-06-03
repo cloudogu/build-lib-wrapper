@@ -102,10 +102,18 @@ def call(Map config) {
             Changelog changelog = new Changelog(this)
             EcoSystem ecoSystem = new EcoSystem(this, gcloudCredentials, sshCredentials)
             def vagrant = new Vagrant(this, gcloudCredentials, sshCredentials)
+            def rawPreinstalledDogus = ecoSystem.defaultSetupConfig["dependencies"]
+            // Entferne Prefix (z. B. "official/") aus allen Einträgen
+            def cleanedPreinstalledDogus = rawPreinstalledDogus.collect { it.split('/')[1] }
+            // Prüfen, ob der doguName enthalten ist
+            def isDoguPreinstalled = cleanedPreinstalledDogus.contains(doguName)
+
 
             try {
+                       
                 stage('Provision') {
                     // For pre-release branches, adjust namespace.
+                    echo "[DEBUG] Dogu is preinstalled on vagrant: ${isDoguPreinstalled}"
                     if (gitflow.isPreReleaseBranch()) {
                         sh "make prerelease_namespace"
                     }
