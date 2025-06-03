@@ -138,10 +138,12 @@ def call(Map config) {
                 }
                 
                 stage('Build') {
-                    // purge dogu from official namespace to prevent conflicts while building prerelease_official/dogu
-                    if (gitflow.isPreReleaseBranch()) {
-                        ecoSystem.purgeDogu(doguName, "--keep-config --keep-volumes --keep-service-accounts --keep-logs")
+                    if (isDoguPreinstalled) {
+                     if (gitflow.isPreReleaseBranch()) {
+                         ecoSystem.purgeDogu(doguName, "--keep-config --keep-volumes --keep-service-accounts --keep-logs")
+                     }
                     }
+
                     ecoSystem.build(doguDir)
                 }
                 
