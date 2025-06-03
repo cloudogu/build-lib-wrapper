@@ -113,7 +113,9 @@ def call(Map config) {
                        
                 stage('Provision') {
                     // For pre-release branches, adjust namespace.
+                    echo "[DEBUG] Preinstalled on vagrant: ${rawPreinstalledDogus}"
                     echo "[DEBUG] Dogu is preinstalled on vagrant: ${isDoguPreinstalled}"
+
                     if (gitflow.isPreReleaseBranch()) {
                         sh "make prerelease_namespace"
                     }
@@ -136,6 +138,10 @@ def call(Map config) {
                 }
                 
                 stage('Build') {
+                    // purge dogu from official namespace to prevent conflicts while building prerelease_official/dogu
+                    if (gitflow.isPreReleaseBranch()) {
+                        ecoSystem.purgeDogu(doguName, "--keep-config --keep-volumes --keep-service-accounts --keep-logs")
+                    }
                     ecoSystem.build(doguDir)
                 }
                 
