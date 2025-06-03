@@ -204,12 +204,18 @@ def call(Map config) {
                 // Release steps if on a release branch.
                 if (gitflow.isReleaseBranch()) {
                     String releaseVersion = git.getSimpleBranchName()
-                 
-                    String releaseTargetBranch = config.releaseTargetBranch ?: sh(
-                        script: "git remote show origin | grep 'HEAD branch' | awk '{print \$NF}'",
+                    String releaseTargetBranch = sh(
+                        script: '''
+                            if git show-ref --verify --quiet refs/heads/main; then
+                                echo main
+                            elif git show-ref --verify --quiet refs/heads/master; then
+                                echo master
+                            else
+                                echo ""
+                            fi
+                        ''',
                         returnStdout: true
                     ).trim()
-
                     echo "[DEBUG] release branch: ${releaseTargetBranch}"
 
                     stage('Finish Release') {
