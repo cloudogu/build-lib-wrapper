@@ -206,13 +206,13 @@ def call(Map config) {
                     String releaseVersion = git.getSimpleBranchName()
                     String releaseTargetBranch = sh(
                         script: '''
-                            if git show-ref --verify --quiet refs/heads/main; then
-                                echo main
-                            elif git show-ref --verify --quiet refs/heads/master; then
-                                echo master
-                            else
-                                echo ""
-                            fi
+                          if git show-ref --verify --quiet refs/remotes/origin/main; then
+                              echo main
+                          elif git show-ref --verify --quiet refs/remotes/origin/master; then
+                              echo master
+                          else
+                              echo ""
+                          fi
                         ''',
                         returnStdout: true
                     ).trim()
