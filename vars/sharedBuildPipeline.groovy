@@ -204,15 +204,23 @@ def call(Map config) {
                 // Release steps if on a release branch.
                 if (gitflow.isReleaseBranch()) {
                     String releaseVersion = git.getSimpleBranchName()
+                 
+                    String releaseTargetBranch = config.releaseTargetBranch ?: sh(
+                        script: "git remote show origin | grep 'HEAD branch' | awk '{print \$NF}'",
+                        returnStdout: true
+                    ).trim()
+
+                    echo "[DEBUG] release branch: ${releaseTargetBranch}"
+
                     stage('Finish Release') {
                         // Optionally, target branch can be provided (default "main")
-                        gitflow.finishRelease(releaseVersion, config.releaseTargetBranch ?: "main")
+                        gitflow.finishRelease(releaseVersion, releaseTargetBranch)
                     }
                     stage('Push Dogu to registry') {
                         ecoSystem.push(doguDir)
                     }
                     stage('Add Github-Release') {
-                        github.createReleaseWithChangelog(releaseVersion, changelog, config.releaseTargetBranch ?: "main")
+                        github.createReleaseWithChangelog(releaseVersion, changelog, releaseTargetBranch)
                     }
                 } else if (gitflow.isPreReleaseBranch()) {
                     stage('Push Prerelease Dogu to registry') {
