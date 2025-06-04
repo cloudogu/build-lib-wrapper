@@ -40,7 +40,9 @@ def call(Map config) {
     def markdownVersion     = config.markdownVersion ? config.markdownVersion : "3.12.2" 
     def updateSubmodules    = config.updateSubmodules ? config.updateSubmodules : false 
     def runIntegrationTests = config.runIntegrationTests ? config.runIntegrationTests : false
-
+    def registryConfig      = config.registryConfig ? config.registryConfig : ""
+    def registryConfigE     = config.registryConfigEncrypted ? config.registryConfigEncrypted : ""
+ 
     // PRE-BUILD STEPS (e.g. Checkout, Lint, Markdown, Shell tests) on preBuildAgent.
     node(preBuildAgent) {
         timestamps {
@@ -124,7 +126,7 @@ def call(Map config) {
                 
                 stage('Setup') {
                     ecoSystem.loginBackend(backendUser)
-                    ecoSystem.setup()
+                    ecoSystem.setup([registryConfig:${registryConfig}, registryConfigEncrypted:${registryConfigE}])
                 }
                 
                 if (dependedDogus) {
