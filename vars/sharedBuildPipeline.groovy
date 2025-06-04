@@ -122,9 +122,6 @@ def call(Map config) {
                 }                       
                 stage('Provision') {
                     // For pre-release branches, adjust namespace.
-                    echo "[DEBUG] Preinstalled on vagrant: ${rawPreinstalledDogus}"
-                    echo "[DEBUG] Dogu is preinstalled on vagrant: ${isDoguPreinstalled}"
-
                     if (gitflow.isPreReleaseBranch()) {
                         sh "make prerelease_namespace"
                     }
@@ -133,7 +130,25 @@ def call(Map config) {
                 
                 stage('Setup') {
                     ecoSystem.loginBackend(backendUser)
-                    ecoSystem.setup() // truly no argument
+                    
+                    def setupArgs = [:]
+
+                    if (registryConfig?.trim()) {
+                    
+                    setupArgs.registryConfig = registryConfig
+                    
+                    }
+                    if (registryConfigE?.trim()) {
+                        setupArgs.registryConfigEncrypted = registryConfigE
+                    }
+                    
+                    if (setupArgs) {
+                        echo "[DEBUG 0] setupArgs: ${setupArgs}"
+                        ecoSystem.setup(setupArgs)
+                    } else {
+                        echo "[DEBUG 1] setupArgs: ${setupArgs}"
+                        ecoSystem.setup() // truly no arguments else pipeline will fail with: level=warning msg="Registry does not contain a key 'key_provider'."
+                    }
                 }
                 
                 if (dependedDogus) {
@@ -146,7 +161,9 @@ def call(Map config) {
                     }
                 }
                 
-                stage('Build') {
+                stage('Build') {                    
+                    echo "[DEBUG] Preinstalled on vagrant: ${rawPreinstalledDogus}"
+                    echo "[DEBUG] Dogu is preinstalled on vagrant: ${isDoguPreinstalled}"
                     if (isDoguPreinstalled) {
                      if (gitflow.isPreReleaseBranch()) {
                          ecoSystem.purgeDogu(doguName, "--keep-config --keep-volumes --keep-service-accounts --keep-logs")
