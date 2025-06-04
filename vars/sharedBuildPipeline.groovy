@@ -142,7 +142,11 @@ def call(Map config) {
                         setupArgs.registryConfigEncrypted = registryConfigEncrypted
                     }
                     
-                    ecoSystem.setup(setupArgs)
+                    if (setupArgs) {
+                        ecoSystem.setup(setupArgs)
+                    } else {
+                        ecoSystem.setup() // truly no arguments
+                    }
                 }
                 
                 if (dependedDogus) {
