@@ -130,27 +130,24 @@ def call(Map config) {
                 
                 stage('Setup') {
                     ecoSystem.loginBackend(backendUser)
-                    
+                
                     def setupArgs = [:]
-
                     if (registryConfig?.trim()) {
-                    
-                    setupArgs.registryConfig = registryConfig
-                    
+                        setupArgs.registryConfig = registryConfig
                     }
                     if (registryConfigE?.trim()) {
                         setupArgs.registryConfigEncrypted = registryConfigE
                     }
-                    
+                
                     if (setupArgs) {
-                        echo "[DEBUG 0] setupArgs: ${setupArgs}"
-                        ecoSystem.setup(setupArgs)
+                        echo "[INFO] Calling setup with: ${setupArgs.keySet()}"
+                        ecoSystem.setup(*:[setupArgs]) // Spread map only if not empty
                     } else {
-                        echo "[DEBUG 1] setupArgs: ${setupArgs}"
-                        ecoSystem.setup() // truly no arguments else pipeline will fail with: level=warning msg="Registry does not contain a key 'key_provider'."
+                        echo "[INFO] Calling setup with no arguments"
+                        ecoSystem.setup() // Truly no args
                     }
                 }
-                
+             
                 if (dependedDogus) {
                     stage('Wait for dependencies') {
                         timeout(time: waitForDepTime, unit: 'MINUTES') {
