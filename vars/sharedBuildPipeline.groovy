@@ -133,7 +133,16 @@ def call(Map config) {
                 
                 stage('Setup') {
                     ecoSystem.loginBackend(backendUser)
-                    ecoSystem.setup([registryConfig:${registryConfig}, registryConfigEncrypted:${registryConfigE}])
+                    def setupArgs = [:]
+                    
+                    if (registryConfig?.trim()) {
+                        setupArgs.registryConfig = registryConfig
+                    }
+                    if (registryConfigEncrypted?.trim()) {
+                        setupArgs.registryConfigEncrypted = registryConfigEncrypted
+                    }
+                    
+                    ecoSystem.setup(setupArgs)
                 }
                 
                 if (dependedDogus) {
