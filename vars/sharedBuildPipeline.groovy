@@ -40,6 +40,7 @@ def call(Map config) {
     def markdownVersion     = config.markdownVersion ? config.markdownVersion : "3.12.2" 
     def updateSubmodules    = config.updateSubmodules ? config.updateSubmodules : false 
     def runIntegrationTests = config.runIntegrationTests ? config.runIntegrationTests : false
+    def doBatsTests         = config.doBatsTests ? config.doBatsTests : false
     def registryConfig      = config.registryConfig ? config.registryConfig : ""
     def registryConfigE     = config.registryConfigEncrypted ? config.registryConfigEncrypted : ""
  
@@ -112,7 +113,13 @@ def call(Map config) {
 
 
             try {
-                       
+
+                if (doBatsTests) {
+                   stage('Bats Tests') {
+                     Bats bats = new Bats(this, docker)
+                     bats.checkAndExecuteTests()
+                   }
+                }                       
                 stage('Provision') {
                     // For pre-release branches, adjust namespace.
                     echo "[DEBUG] Preinstalled on vagrant: ${rawPreinstalledDogus}"
