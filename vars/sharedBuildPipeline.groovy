@@ -114,6 +114,12 @@ def call(Map config) {
 
 
             try {
+                stage('Checkout') {
+                    checkout scm
+                    if (config.updateSubmodules) {
+                        sh 'git submodule update --init'
+                    }
+                }
 
                 if (doBatsTests) {
                    stage('Bats Tests') {
