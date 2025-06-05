@@ -37,11 +37,59 @@ sharedBuildPipeline([
     // Additional options
     updateSubmodules    : false,
     shellScripts        : "./resources/logging.sh ./resources/startup.sh ./resources/mask2cidr.sh",
-    dependencies        : ["nginx"],
+    dependencies        : ["nginx"], // dogusto wait for
     checkMarkdown       : true,
     runIntegrationTests : false,
     cypressImage        : "cypress/included:13.15.2",
-    upgradeCypressImage : "cypress/included:13.2.0"
+    upgradeCypressImage : "cypress/included:13.2.0",
+
+#!groovy
+@Library([
+  'github.com/cloudogu/build-lib-wrapper@develop',
+  'ces-build-lib', // versioning handled by Global Trusted Pipeline Libraries in Jenkins
+  'dogu-build-lib' // versioning handled by Global Trusted Pipeline Libraries in Jenkins
+]) _
+
+// Now call the sharedBuildPipeline function with your custom configuration.
+sharedBuildPipeline([
+    // Required parameter
+    doguName: "plantuml",
+    
+    // Optional parameters – override defaults here
+    preBuildAgent       : 'sos',
+    buildAgent          : 'sos',
+    doguDirectory       : "/dogu",
+    namespace           : "official",
+    
+    // Credentials and git information
+    gitUser             : "cesmarvin",
+    committerEmail      : "cesmarvin@cloudogu.com",
+    gcloudCredentials   : "gcloud-ces-operations-internal-packer",
+    sshCredentials      : "jenkins-gcloud-ces-operations-internal",
+    backendUser         : "cesmarvin-setup",
+    
+    // Additional options
+    updateSubmodules    : false,
+    shellScripts        : "./resources/startup.sh ./resources/opt/apache-tomcat/bin/setenv.sh",
+    dependencies        : ["nginx"],
+    checkMarkdown       : true,
+    runIntegrationTests : true,
+    doBatsTests         : true,
+    cypressImage        : "cypress/included:13.14.2",
+    registryConfig      : """
+                            "_global": {
+                                "password-policy": {
+                                    "must_contain_capital_letter": "false",
+                                    "must_contain_lower_case_letter": "false",
+                                    "must_contain_digit": "false",
+                                    "must_contain_special_character": "false",
+                                    "min_length": "1"
+                                }
+                            }
+                          """,
+    additionalDependencies: ['official/mysql', 'official/redis'], //dogus that need to be installed
+])
+
 ])
 ```
 
