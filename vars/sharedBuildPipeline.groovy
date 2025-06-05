@@ -237,7 +237,7 @@ def call(Map config) {
                           elif git show-ref --verify --quiet refs/remotes/origin/master; then
                               echo master
                           else
-                              echo ""
+                              exit 1
                           fi
                         ''',
                         returnStdout: true
