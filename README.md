@@ -99,7 +99,8 @@ Falls Sie eine neue Version testen wollen, können Sie die Version der Library a
 // Standardimport (globale Version)
 @Library([
   'github.com/cloudogu/build-lib-wrapper@release',
-  // ces & dogulib werden implizit über https://ecosystem.cloudogu.com/jenkins/manage/configure Global Trusted Pipeline Libraries default version geladen
+  'ces-build-lib'  // versioning handled by Global Trusted Pipeline Libraries in Jenkins
+  'dogu-build-lib' // versioning handled by Global Trusted Pipeline Libraries in Jenkins
 ]) _
 
 // Testen einer neuen Version mit Überschreibung
