@@ -139,7 +139,7 @@ def call(Map config) {
                     if (registryConfigE?.trim()) {
                         setupArgs.registryConfigEncrypted = registryConfigE
                     }
-                    if (additionalDependencies?.trim()) {
+                    if (additionalDependencies) {
                         setupArgs.additionalDependencies = additionalDependencies
                     }
                     if (setupArgs) {
