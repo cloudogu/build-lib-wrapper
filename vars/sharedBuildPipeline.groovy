@@ -22,27 +22,27 @@ import com.cloudogu.ces.dogubuildlib.*
  
 def call(Map config) {
     // Use default node labels if not provided.
-    def doguName            = config.doguName
-    def backendUser         = config.backendUser
-    def gitUserName         = config.gitUser
-    def committerEmail      = config.committerEmail
-    def gcloudCredentials   = config.gcloudCredentials
-    def sshCredentials      = config.sshCredentials
-    def preBuildAgent       = config.preBuildAgent ? config.preBuildAgent : 'docker'
-    def buildAgent          = config.buildAgent ? config.buildAgent : 'vagrant'
-    def doguDir             = config.doguDirectory ? config.doguDirectory : "/dogu"
-    def namespace           = config.namespace ? config.namespace : "official"
-    def waitForDepTime      = config.waitForDepTime ? config.waitForDepTime : 15 // Minutes
-    def cypressImage        = config.cypressImage ? config.cypressImage : "cypress/included:13.15.2"
-    def upgradeCypressImage = config.upgradeCypressImage ? config.upgradeCypressImage : "cypress/included:13.2.0"
-    def shellScripts        = config.shellScripts ? config.shellScripts : '' // single string to paths delimited by whitespace
-    def dependedDogus       = config.dependencies ? config.dependencies : ''
-    def markdownVersion     = config.markdownVersion ? config.markdownVersion : "3.12.2" 
-    def updateSubmodules    = config.updateSubmodules ? config.updateSubmodules : false 
-    def runIntegrationTests = config.runIntegrationTests ? config.runIntegrationTests : false
-    def doBatsTests         = config.doBatsTests ? config.doBatsTests : false
-    def registryConfig      = config.registryConfig ? config.registryConfig : """"""
-    def registryConfigE     = config.registryConfigEncrypted ? config.registryConfigEncrypted : """"""
+    def doguName               = config.doguName
+    def backendUser            = config.backendUser
+    def gitUserName            = config.gitUser
+    def committerEmail         = config.committerEmail
+    def gcloudCredentials      = config.gcloudCredentials
+    def sshCredentials         = config.sshCredentials
+    def preBuildAgent          = config.preBuildAgent ? config.preBuildAgent : 'docker'
+    def buildAgent             = config.buildAgent ? config.buildAgent : 'vagrant'
+    def doguDir                = config.doguDirectory ? config.doguDirectory : "/dogu"
+    def namespace              = config.namespace ? config.namespace : "official"
+    def waitForDepTime         = config.waitForDepTime ? config.waitForDepTime : 15 // Minutes
+    def cypressImage           = config.cypressImage ? config.cypressImage : "cypress/included:13.15.2"
+    def upgradeCypressImage    = config.upgradeCypressImage ? config.upgradeCypressImage : "cypress/included:13.2.0"
+    def shellScripts           = config.shellScripts ? config.shellScripts : '' // single string to paths delimited by whitespace
+    def dependedDogus          = config.dependencies ? config.dependencies : ''
+    def markdownVersion        = config.markdownVersion ? config.markdownVersion : "3.12.2" 
+    def updateSubmodules       = config.updateSubmodules ? config.updateSubmodules : false 
+    def runIntegrationTests    = config.runIntegrationTests ? config.runIntegrationTests : false
+    def doBatsTests            = config.doBatsTests ? config.doBatsTests : false
+    def registryConfig         = config.registryConfig ? config.registryConfig : """"""
+    def registryConfigE        = config.registryConfigEncrypted ? config.registryConfigEncrypted : """"""
     def additionalDependencies = config.additionalDependencies? config.additionalDependencies : """"""
  
     // PRE-BUILD STEPS (e.g. Checkout, Lint, Markdown, Shell tests) on preBuildAgent.
@@ -144,7 +144,7 @@ def call(Map config) {
                     }
                     if (setupArgs) {
                         echo "[INFO] Calling setup with: ${setupArgs.keySet()} "
-                        ecoSystem.setup(*:[setupArgs]) // Spread map only if not empty
+                        ecoSystem.setup(*:setupArgs) // Spread map only if not empty
                     } else {
                         echo "[INFO] Calling setup with no arguments"
                         ecoSystem.setup() // Truly no args
