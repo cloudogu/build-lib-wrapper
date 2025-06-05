@@ -89,8 +89,6 @@ sharedBuildPipeline([
                           """,
     additionalDependencies: ['official/mysql', 'official/redis'], //dogus that need to be installed
 ])
-
-])
 ```
 
 Falls Sie eine neue Version testen wollen, können Sie die Version der Library auch direkt überschreiben:
