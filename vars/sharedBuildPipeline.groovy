@@ -41,8 +41,9 @@ def call(Map config) {
     def updateSubmodules    = config.updateSubmodules ? config.updateSubmodules : false 
     def runIntegrationTests = config.runIntegrationTests ? config.runIntegrationTests : false
     def doBatsTests         = config.doBatsTests ? config.doBatsTests : false
-    def registryConfig      = config.registryConfig ? config.registryConfig : ""
-    def registryConfigE     = config.registryConfigEncrypted ? config.registryConfigEncrypted : ""
+    def registryConfig      = config.registryConfig ? config.registryConfig : """"""
+    def registryConfigE     = config.registryConfigEncrypted ? config.registryConfigEncrypted : """"""
+    def additionalDependencies = config.additionalDependencies? config.additionalDependencies : """"""
  
     // PRE-BUILD STEPS (e.g. Checkout, Lint, Markdown, Shell tests) on preBuildAgent.
     node(preBuildAgent) {
@@ -138,9 +139,11 @@ def call(Map config) {
                     if (registryConfigE?.trim()) {
                         setupArgs.registryConfigEncrypted = registryConfigE
                     }
-                
+                    if (additionalDependencies?.trim()) {
+                        setupArgs.additionalDependencies = additionalDependencies
+                    }
                     if (setupArgs) {
-                        echo "[INFO] Calling setup with: ${setupArgs.keySet()}"
+                        echo "[INFO] Calling setup with: ${setupArgs.keySet()} "
                         ecoSystem.setup(*:[setupArgs]) // Spread map only if not empty
                     } else {
                         echo "[INFO] Calling setup with no arguments"
