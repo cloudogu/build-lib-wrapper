@@ -73,7 +73,7 @@ sharedBuildPipeline([
     // Additional options
     updateSubmodules    : false,
     shellScripts        : "./resources/startup.sh ./resources/opt/apache-tomcat/bin/setenv.sh",
-    dependencies        : ["nginx"],
+    dependencies        : ["nginx", "mysql", "redis"],
     checkMarkdown       : true,
     runIntegrationTests : true,
     doBatsTests         : true,
