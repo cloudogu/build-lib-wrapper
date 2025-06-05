@@ -42,7 +42,9 @@ sharedBuildPipeline([
     runIntegrationTests : false,
     cypressImage        : "cypress/included:13.15.2",
     upgradeCypressImage : "cypress/included:13.2.0",
-
+```
+another example:
+```groovy
 #!groovy
 @Library([
   'github.com/cloudogu/build-lib-wrapper@develop',
