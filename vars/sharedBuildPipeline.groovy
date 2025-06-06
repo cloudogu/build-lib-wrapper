@@ -245,6 +245,8 @@ def call(Map config) {
                 
                 // Release steps if on a release branch.
                 if (gitflow.isReleaseBranch()) {
+                    sh 'git fetch --all'
+
                     String releaseVersion = git.getSimpleBranchName()
                     String releaseTargetBranch = sh(
                         script: '''
