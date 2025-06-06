@@ -54,10 +54,7 @@ def call(Map config) {
         timestamps {
             // Checkout code (and update submodules if requested)
             stage('Checkout') {
-                checkout scm
-                if (config.updateSubmodules) {
-                    sh 'git submodule update --init'
-                }
+                checkout_updatemakefiles()
             }
             stage('Lint') {
                 // Lint the Dockerfile
@@ -119,10 +116,7 @@ def call(Map config) {
 
             try {
                 stage('Checkout') {
-                    checkout scm
-                    if (config.updateSubmodules) {
-                        sh 'git submodule update --init'
-                    }
+                    checkout_updatemakefiles()
                 }
 
                 if (doBatsTests) {
@@ -312,6 +306,44 @@ def runCypress(EcoSystem ecoSystem, def cypressImage, def params) {
         enableVideo      : params.EnableVideoRecording,
         enableScreenshots: params.EnableScreenshotRecording
     ])
+}
+
+def checkout_updatemakefiles() {
+    checkout scm
+    if (config.updateSubmodules) {
+        sh 'git submodule update --init'
+    }
+    
+    // Add this block here
+    if (fileExists('Makefile')) {
+        stage('Update Makefile Version') {
+            // Download yq only if needed (optional)
+            sh '''
+                mkdir -p .bin
+                curl -L https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64 -o .bin/yq
+                chmod +x .bin/yq
+            '''
+    
+            // Get latest tag from GitHub API
+            def latestVersion = sh(
+                script: "curl -s https://api.github.com/repos/cloudogu/makefiles/releases/latest | grep tag_name | cut -d '\"' -f4",
+                returnStdout: true
+            ).trim()
+    
+    
+            // Strip leading "v"
+            def versionNoV = latestVersion.replaceFirst(/^v/, "")
+    
+            echo "Latest Makefiles version is ${versionNoV}"
+    
+            // Replace version in Makefile
+            sh "sed -i 's/^MAKEFILES_VERSION=.*/MAKEFILES_VERSION=${versionNoV}/' Makefile"
+    
+                    
+            // Manually fetch and apply the Makefiles from the public GitHub tag archive
+            sh "make update-makefiles"
+        }
+    }       
 }
 
 
