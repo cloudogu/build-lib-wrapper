@@ -44,8 +44,8 @@ def call(Map config) {
     def registryConfig         = config.registryConfig ? config.registryConfig : """"""
     def registryConfigE        = config.registryConfigEncrypted ? config.registryConfigEncrypted : """"""
     def additionalDependencies = config.additionalDependencies? config.additionalDependencies : """"""
-    def postVerifyStage        = config.postVerifyStage? config.postVerifyStage : { _ -> }
- 
+    def postVerifyStage        = config.postVerifyStage ? config.postVerifyStage : { _ -> }
+    def postIntegrationStage   = config.postIntegrationStage ? config.postIntegrationStage : { _ -> }
     // PRE-BUILD STEPS (e.g. Checkout, Lint, Markdown, Shell tests) on preBuildAgent.
     node(preBuildAgent) {
         timestamps {
@@ -194,20 +194,20 @@ def call(Map config) {
                 }
 
                 if (postVerifyStage) {
-                    postVerify.call(ecoSystem) // passes the real object
+                    postVerify.call(ecoSystem)
                 }
              
                 // Optional Integration Tests using Cypress.
                 if (runIntegrationTests) {
                     stage('Integration Tests') {
-                        ecoSystem.runCypressIntegrationTests([
-                            cypressImage     : cypressImage,
-                            enableVideo      : params.EnableVideoRecording,
-                            enableScreenshots: params.EnableScreenshotRecording
-                        ])
+                     runCypress(cypressImage, params.EnableVideoRecording, params.EnableScreenshotRecording)
                     }
                 }
-                
+
+                if (postIntegrationStage) {
+                    postIntegrationStage.call(this)
+                }
+
                 // Optional Upgrade Dogu test.
                 if (params.TestDoguUpgrade) {
                     stage('Upgrade dogu') {
@@ -297,3 +297,13 @@ void executeShellTests() {
         junit allowEmptyResults: true, testResults: 'target/shell_test_reports/*.xml'
     }
 }
+
+def runCypress(EcoSystem ecoSystem, def cypressImage, def params) {
+    ecoSystem.runCypressIntegrationTests([
+        cypressImage     : cypressImage,
+        enableVideo      : params.EnableVideoRecording,
+        enableScreenshots: params.EnableScreenshotRecording
+    ])
+}
+
+
