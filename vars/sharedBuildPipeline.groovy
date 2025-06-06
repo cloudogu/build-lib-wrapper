@@ -47,6 +47,8 @@ def call(Map config) {
     def postVerifyStage        = config.postVerifyStage ? config.postVerifyStage : { _ -> }
     def postIntegrationStage   = config.postIntegrationStage ? config.postIntegrationStage : { _ -> }
     def preVerifyStage         = config.preVerifyStage ? config.preVerifyStage : { _ -> }
+    def script                 = config.script ?: this // fallback if not passed
+
     // PRE-BUILD STEPS (e.g. Checkout, Lint, Markdown, Shell tests) on preBuildAgent.
     node(preBuildAgent) {
         timestamps {
@@ -191,7 +193,7 @@ def call(Map config) {
                 }
              
                 if (preVerifyStage) {
-                    preVerifyStage.call(this)
+                    preVerifyStage.call(script)
                 }
 
                 stage('Verify') {
@@ -210,7 +212,7 @@ def call(Map config) {
                 }
 
                 if (postIntegrationStage) {
-                    postIntegrationStage.call(this)
+                    postIntegrationStage.call(script)
                 }
 
                 // Optional Upgrade Dogu test.
