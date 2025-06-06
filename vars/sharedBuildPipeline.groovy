@@ -194,7 +194,7 @@ def call(Map config) {
                 }
 
                 if (postVerifyStage) {
-                    postVerify.call(ecoSystem)
+                    postVerifyStage.call(ecoSystem)
                 }
              
                 // Optional Integration Tests using Cypress.
