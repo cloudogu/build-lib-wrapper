@@ -193,7 +193,7 @@ def call(Map config) {
                 }
              
                 if (preVerifyStage) {
-                    preVerifyStage.call(script)
+                    preVerifyStage.call(ecoSystem)
                 }
 
                 stage('Verify') {
@@ -212,7 +212,7 @@ def call(Map config) {
                 }
 
                 if (postIntegrationStage) {
-                    postIntegrationStage.call(script)
+                    postIntegrationStage.call(ecoSystem)
                 }
 
                 // Optional Upgrade Dogu test.
@@ -247,8 +247,7 @@ def call(Map config) {
                 
                 // Release steps if on a release branch.
                 if (gitflow.isReleaseBranch()) {
-                    sh 'git fetch --all'
-
+                    sh 'git fetch origin +refs/heads/*:refs/remotes/origin/*'
                     String releaseVersion = git.getSimpleBranchName()
                     String releaseTargetBranch = sh(
                         script: '''
