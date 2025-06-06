@@ -46,6 +46,7 @@ def call(Map config) {
     def additionalDependencies = config.additionalDependencies? config.additionalDependencies : """"""
     def postVerifyStage        = config.postVerifyStage ? config.postVerifyStage : { _ -> }
     def postIntegrationStage   = config.postIntegrationStage ? config.postIntegrationStage : { _ -> }
+    def preVerifyStage         = config.preVerifyStage ? config.preVerifyStage : { _ -> }
     // PRE-BUILD STEPS (e.g. Checkout, Lint, Markdown, Shell tests) on preBuildAgent.
     node(preBuildAgent) {
         timestamps {
@@ -188,7 +189,11 @@ def call(Map config) {
                     trivy.saveFormattedTrivyReport(TrivyScanFormat.JSON)
                     trivy.saveFormattedTrivyReport(TrivyScanFormat.HTML)
                 }
-                
+             
+                if (preVerifyStage) {
+                    preVerifyStage.call(this)
+                }
+
                 stage('Verify') {
                     ecoSystem.verify(doguDir)
                 }
