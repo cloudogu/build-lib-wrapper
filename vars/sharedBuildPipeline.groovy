@@ -44,6 +44,7 @@ def call(Map config) {
     def registryConfig         = config.registryConfig ? config.registryConfig : """"""
     def registryConfigE        = config.registryConfigEncrypted ? config.registryConfigEncrypted : """"""
     def additionalDependencies = config.additionalDependencies? config.additionalDependencies : """"""
+    def postVerifyStage        = config.postVerifyStage? config.postVerifyStage : { _ -> }
  
     // PRE-BUILD STEPS (e.g. Checkout, Lint, Markdown, Shell tests) on preBuildAgent.
     node(preBuildAgent) {
@@ -191,7 +192,11 @@ def call(Map config) {
                 stage('Verify') {
                     ecoSystem.verify(doguDir)
                 }
-                
+
+                if (postVerifyStage) {
+                    postVerify.call(ecoSystem) // passes the real object
+                }
+             
                 // Optional Integration Tests using Cypress.
                 if (runIntegrationTests) {
                     stage('Integration Tests') {
