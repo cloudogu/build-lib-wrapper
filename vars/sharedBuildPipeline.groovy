@@ -54,7 +54,7 @@ def call(Map config) {
         timestamps {
             // Checkout code (and update submodules if requested)
             stage('Checkout') {
-                checkout_updatemakefiles()
+                checkout_updatemakefiles(config.updateSubmodules)
             }
             stage('Lint') {
                 // Lint the Dockerfile
@@ -116,7 +116,7 @@ def call(Map config) {
 
             try {
                 stage('Checkout') {
-                    checkout_updatemakefiles()
+                    checkout_updatemakefiles(config.updateSubmodules)
                 }
 
                 if (doBatsTests) {
@@ -308,9 +308,9 @@ def runCypress(EcoSystem ecoSystem, def cypressImage, def params) {
     ])
 }
 
-def checkout_updatemakefiles() {
+def checkout_updatemakefiles(updateSubmodules) {
     checkout scm
-    if (config.updateSubmodules) {
+    if (updateSubmodules) {
         sh 'git submodule update --init'
     }
     
