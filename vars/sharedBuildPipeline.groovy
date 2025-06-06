@@ -205,7 +205,7 @@ def call(Map config) {
                 // Optional Integration Tests using Cypress.
                 if (runIntegrationTests) {
                     stage('Integration Tests') {
-                      runCypress(ecosystem, cypressImage, params)
+                      runCypress(ecoSystem, cypressImage, params)
                     }
                 }
 
